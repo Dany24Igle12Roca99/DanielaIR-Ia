@@ -1,17 +1,13 @@
-# ESTUDIANTE: IGLESIAS ROCABADO DANIELA
-# CU: 35-4780
-
-
 from busquedas_02 import aestrella, ProblemaBusqueda
 
 
-OBJETIVO = '''1-2-3
-4-5-6
-7-8-e'''
+OBJETIVO = '''a-b-c-d
+e-f-g-h
+i-j-k-x'''
 
-INICIAL = '''1-2-3
-5-6-8
-4-7-e'''
+INICIAL = '''a-c-f-d
+i-e-x-b
+j-g-k-h'''
 
 
 def list_to_string(list_):
@@ -33,7 +29,7 @@ def find_location(filas, element_to_find):
 
 posiciones_objetivo = {}
 filas_objetivo = string_to_list(OBJETIVO)
-for numero in '12345678e':
+for numero in 'abcefghijkx':
     posiciones_objetivo[numero] = find_location(filas_objetivo, numero)
 
 
@@ -41,7 +37,7 @@ class EigthPuzzleProblem(ProblemaBusqueda):
     def acciones(self, estado):
         '''Devuelve una lista de piesas que se pueden mover a un espacio vacio.'''
         filas = string_to_list(estado)
-        fila_e, columna_e = find_location(filas, 'e')
+        fila_e, columna_e = find_location(filas, 'x')
 
         acciones = []
         if fila_e > 0:
@@ -50,7 +46,7 @@ class EigthPuzzleProblem(ProblemaBusqueda):
             acciones.append(filas[fila_e + 1][columna_e])
         if columna_e > 0:
             acciones.append(filas[fila_e][columna_e - 1])
-        if columna_e < 2:
+        if columna_e < 3:
             acciones.append(filas[fila_e][columna_e + 1])
 
         return acciones
@@ -59,7 +55,7 @@ class EigthPuzzleProblem(ProblemaBusqueda):
         '''Devuelve el resultado despues de mover una pieza a un espacio en vacio
         '''
         filas = string_to_list(estado)
-        fila_e, columna_e = find_location(filas, 'e')
+        fila_e, columna_e = find_location(filas, 'x')
         fila_n, columna_n = find_location(filas, accion)
 
         filas[fila_e][columna_e], filas[fila_n][columna_n] = filas[fila_n][columna_n], filas[fila_e][columna_e]
@@ -75,20 +71,32 @@ class EigthPuzzleProblem(ProblemaBusqueda):
         '''
         return 1
 
-    def heuristica(self, estado):
-        '''Devuelve una estimacion de la distancia
-        de un estado a otro, utilizando la distancia manhattan.
-        '''
+    # def heuristica(self, estado):
+    #     '''Devuelve una estimacion de la distancia
+    #     de un estado a otro, utilizando la distancia manhattan.
+    #     '''
+    #     filas = string_to_list(estado)
+    #
+    #     distancia = 0
+    #
+    #     for numero in 'abcefghijkx':
+    #         fila_n, columna_n = find_location(filas, numero)
+    #         fila_n_objetivo, col_n_goal = posiciones_objetivo[numero]
+    #
+    #         distancia += abs(fila_n - fila_n_objetivo) + abs(columna_n - col_n_goal)
+    #
+    #     return distancia
+
+    def heurisica(self,estado):
         filas = string_to_list(estado)
 
         distancia = 0
 
-        for numero in '12345678e':
+        for numero in 'abcdefghijkx':
             fila_n, columna_n = find_location(filas, numero)
             fila_n_objetivo, col_n_goal = posiciones_objetivo[numero]
-
-            distancia += abs(fila_n - fila_n_objetivo) + abs(columna_n - col_n_goal)
-
+            if fila_n != fila_n_objetivo and columna_n != col_n_goal:
+                distancia += 1
         return distancia
 
 
